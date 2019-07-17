@@ -1,0 +1,10 @@
+.movie-slider-wrapper {
+  padding: 15px;
+  overflow-x: hidden;
+}
+
+.movie-slider-title {
+  text-align: left;
+  margin-bottom: 15px;
+  font-weight: bold;
+}
