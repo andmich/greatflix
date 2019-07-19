@@ -59,17 +59,17 @@ namespace greatflix.common.Clients.TMDb
             }
         }
 
-        public TMDbResponse<TMDbMovie> GetMovie(int id, string language = "English")
+        public TMDbMovie GetMovie(int id, string language = "English")
         {
             var uriQuery = $"api_key={_apiKey}&language={language}";
-            var getResponse = _httpClient.GetAsync($"{_baseAddress}/movie/{id}/{uriQuery}");
+            var getResponse = _httpClient.GetAsync($"{_baseAddress}/movie/{id}?{uriQuery}");
             getResponse.Wait();
 
             var result = getResponse.Result;
 
             if (result.IsSuccessStatusCode)
             {
-                return JsonConvert.DeserializeObject<TMDbResponse<TMDbMovie>>(result.Content.ReadAsStringAsync().Result);
+                return JsonConvert.DeserializeObject<TMDbMovie>(result.Content.ReadAsStringAsync().Result);
             }
             else
             {
