@@ -1,7 +1,9 @@
 ﻿using greatflix.common.Clients.TMDb;
+using greatflix.dal.DTOs;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
 using System;
+using System.Linq;
 using System.Net;
 
 namespace greatflix.api.Controllers
@@ -62,6 +64,37 @@ namespace greatflix.api.Controllers
                     var movie = tmdbClient.GetMovie(id);
 
                     return Ok(movie);
+                }
+                catch (Exception ex)
+                {
+                    errorMessage = ex.Message;
+                }
+
+                return new ContentResult
+                {
+                    Content = errorMessage,
+                    ContentType = "application/json",
+                    StatusCode = (int)HttpStatusCode.InternalServerError
+                };
+            }
+        }
+
+        [HttpGet]
+        [Route("discover")]
+        public ActionResult GetByFilters([FromQuery] DiscoverMoviesDTO filters)
+        {
+            string errorMessage;
+
+            using (var tmdbClient = new TMDbClient(_options.Value.ApiKeys.TMDb["v3"]))
+            {
+                // split genres
+                var genreList = filters.genres.Split(",").Select(Int32.Parse).ToList();
+
+                try
+                {
+                    var movies = tmdbClient.DiscoverMovies(genreList, filters.page);
+
+                    return Ok(movies);
                 }
                 catch (Exception ex)
                 {

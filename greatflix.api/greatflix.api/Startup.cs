@@ -21,10 +21,21 @@ namespace greatflix.api
 
         public IConfiguration Configuration { get; }
 
+        readonly string _myOrigins = "greatFlixOrigins";
+
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
+            services.AddCors(options =>
+            {
+                options.AddPolicy(
+                    _myOrigins,
+                    builder =>
+                    {
+                        builder.WithOrigins("http://localhost:3000");
+                    });
+            });
 
             services.AddOptions();
 
@@ -40,6 +51,7 @@ namespace greatflix.api
                 app.UseDeveloperExceptionPage();
             }
 
+            app.UseCors(_myOrigins);
             app.UseMvc();
         }
     }

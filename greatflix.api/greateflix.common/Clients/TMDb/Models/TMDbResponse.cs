@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace greatflix.Common.Clients.TMDb.Models
+namespace greatflix.common.Clients.TMDb.Models
 {
     public class TMDbResponse<T>
     {
