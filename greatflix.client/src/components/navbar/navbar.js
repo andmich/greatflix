@@ -1,7 +1,10 @@
 import React from 'react'
 import PropTypes from 'prop-types'
+import { useAuth0 } from '../../auth-wrapper';
 
 const Navbar = (props) => {
+  const { isAuthenticated, loginWithRedirect, logout } = useAuth0();
+
   return (
     <nav className='navbar' role='navigation' aria-label='main navigation'>
       <div className='navbar-brand'>
@@ -17,39 +20,28 @@ const Navbar = (props) => {
       </div>
 
       <div id='navbarBasicExample' className='navbar-menu'>
-        <div className='navbar-start'>
-          <div className='navbar-item has-dropdown is-hoverable'>
-            <a className='navbar-link'>
-              More
-            </a>
-
-            <div className='navbar-dropdown'>
-              <a className='navbar-item'>
-                About
-              </a>
-              <a className='navbar-item'>
-                Jobs
-              </a>
-              <a className='navbar-item'>
-                Contact
-              </a>
-              <hr className='navbar-divider' />
-              <a className='navbar-item'>
-                Report an issue
-              </a>
-            </div>
-          </div>
-        </div>
-
         <div className='navbar-end'>
           <div className='navbar-item'>
             <div className='buttons'>
-              <a className='button is-primary'>
-                <strong>Sign up</strong>
-              </a>
-              <a className='button is-light'>
-                Log in
-              </a>
+              {!isAuthenticated && (
+                [
+                  <a className='button is-primary'>
+                    <strong>Sign up</strong>
+                  </a>,
+                  <a
+                    className='button is-light'
+                    onClick={() => loginWithRedirect({})}>
+                    Log in
+                  </a>
+                ]
+              )}
+              {isAuthenticated && (
+                <a
+                  className='button is-light'
+                  onClick={() => logout()}>
+                  Log out
+                </a>
+              )}
             </div>
           </div>
         </div>
@@ -57,5 +49,29 @@ const Navbar = (props) => {
     </nav>
   );
 }
+/*
+<div className='navbar-start'>
+  <div className='navbar-item has-dropdown is-hoverable'>
+    <a className='navbar-link'>
+      More
+    </a>
 
+    <div className='navbar-dropdown'>
+      <a className='navbar-item'>
+        About
+      </a>
+      <a className='navbar-item'>
+        Jobs
+      </a>
+      <a className='navbar-item'>
+        Contact
+      </a>
+      <hr className='navbar-divider' />
+      <a className='navbar-item'>
+        Report an issue
+      </a>
+    </div>
+  </div>
+</div>
+*/
 export default Navbar;

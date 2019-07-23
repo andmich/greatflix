@@ -13,59 +13,68 @@ import MovieSlider from './components/movieslider/movieslider';
 import { BasicMovieGenreList } from './globals';
 
 const App = (props) => {
+  const [popularMovies, setPopularMovies] = useState({ isLoading: true, isFailed: false, data: []});
+
   const [actionMovies, setActionMovies] = useState({ isLoading: true, isFailed: false, data: []});
   const [horrorMovies, setHorrorMovies] = useState({ isLoading: true, isFailed: false, data: []});
+  const [comedyMovies, setComedyMovies] = useState({ isLoading: true, isFailed: false, data: []});
 
-  async function fetchActionMovies() {
-    const response = await fetch(`${process.env.REACT_APP_ENDPOINT}/movies/discover?page=1&genres=${BasicMovieGenreList['Action']}`);
+  async function fetchPopularMovies() {
+    const response = await fetch(`${process.env.REACT_APP_ENDPOINT}/movies/popular?page=1`);
 
-    response
-      .json()
-      .then((data) => {
-        setActionMovies({ ...actionMovies, isLoading: false, data: data.results});
-      })
-      .catch(err => {
-        console.log(err)
-        setActionMovies({ isLoading: false, isFailed: true, data: []});
-      });
+    if (response.ok) {
+      response
+        .json()
+        .then((data) => {
+          setPopularMovies({ ...popularMovies, isLoading: false, data: data.results});
+        })
+        .catch(err => {
+          console.log(err);
+          setPopularMovies({ isLoading: false, isFailed: true, data: []});
+        })
+    }
+    else {
+      // error
+      setPopularMovies({ isLoading: false, isFailed: true, data: []});
+    }
   }
 
-  async function fetchHorrorMovies() {
-    const response = await fetch(`${process.env.REACT_APP_ENDPOINT}/movies/discover?page=1&genres=${BasicMovieGenreList['Horror']}`);
+  async function fetchMoviesByGenre(genre, store, setFunction) {
+    const response = await fetch(`${process.env.REACT_APP_ENDPOINT}/movies/discover?page=1&genres=${BasicMovieGenreList[genre]}`);
 
     response
       .json()
       .then((data) => {
-        setHorrorMovies({ ...horrorMovies, isLoading: false, data: data.results});
+        setFunction({ ...store, isLoading: false, data: data.results});
       })
       .catch(err => {
         console.log(err)
-        setHorrorMovies({ isLoading: false, isFailed: true, data: []});
+        setFunction({ isLoading: false, isFailed: true, data: []});
       });
   }
 
   useEffect(() => {
-    fetchActionMovies();
-    fetchHorrorMovies();
+    fetchPopularMovies();
+    fetchMoviesByGenre('Action', actionMovies, setActionMovies);
+    fetchMoviesByGenre('Horror', horrorMovies, setHorrorMovies);
+    fetchMoviesByGenre('Comedy', comedyMovies, setComedyMovies);
   }, []);
 
   return(
     <div className="App">
       <Navbar />
 
-      <div>
-        {console.log(actionMovies, horrorMovies)}
-      </div>
-
       <MovieSlider
         title='Action'
-        data={actionMovies.data}
-        />
+        data={actionMovies.data} />
 
       <MovieSlider
         title='Horror'
-        data={horrorMovies.data}
-        />
+        data={horrorMovies.data} />
+
+      <MovieSlider
+        title='Comedy'
+        data={comedyMovies.data} />
     </div>
   );
 }

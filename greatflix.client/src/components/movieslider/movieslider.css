@@ -15,6 +15,13 @@
   overflow-x: auto;
   justify-content: flex-start;
   flex-direction: row;
+
+  overflow: -moz-scrollbars-none;
+  -ms-overflow-style: none;
+}
+
+.movie-slides::-webkit-scrollbar {
+  width: 0 !important;
 }
 
 .movie-slide {
