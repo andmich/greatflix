@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import logo from './logo.svg';
+import { BrowserRouter as Router, Route } from 'react-router-dom';
 
 // css
 import './App.css';
@@ -7,74 +7,32 @@ import 'bulma/css/bulma.css'
 
 // compnents
 import Navbar from './components/navbar/navbar';
-import MovieSlider from './components/movieslider/movieslider';
-
-// import globals
-import { BasicMovieGenreList } from './globals';
+import Main from './components/main/main';
+import Movie from './components/movie/movie';
+import Settings from './components/settings/settings';
 
 const App = (props) => {
-  const [popularMovies, setPopularMovies] = useState({ isLoading: true, isFailed: false, data: []});
-
-  const [actionMovies, setActionMovies] = useState({ isLoading: true, isFailed: false, data: []});
-  const [horrorMovies, setHorrorMovies] = useState({ isLoading: true, isFailed: false, data: []});
-  const [comedyMovies, setComedyMovies] = useState({ isLoading: true, isFailed: false, data: []});
-
-  async function fetchPopularMovies() {
-    const response = await fetch(`${process.env.REACT_APP_ENDPOINT}/movies/popular?page=1`);
-
-    if (response.ok) {
-      response
-        .json()
-        .then((data) => {
-          setPopularMovies({ ...popularMovies, isLoading: false, data: data.results});
-        })
-        .catch(err => {
-          console.log(err);
-          setPopularMovies({ isLoading: false, isFailed: true, data: []});
-        })
-    }
-    else {
-      // error
-      setPopularMovies({ isLoading: false, isFailed: true, data: []});
-    }
-  }
-
-  async function fetchMoviesByGenre(genre, store, setFunction) {
-    const response = await fetch(`${process.env.REACT_APP_ENDPOINT}/movies/discover?page=1&genres=${BasicMovieGenreList[genre]}`);
-
-    response
-      .json()
-      .then((data) => {
-        setFunction({ ...store, isLoading: false, data: data.results});
-      })
-      .catch(err => {
-        console.log(err)
-        setFunction({ isLoading: false, isFailed: true, data: []});
-      });
-  }
-
-  useEffect(() => {
-    fetchPopularMovies();
-    fetchMoviesByGenre('Action', actionMovies, setActionMovies);
-    fetchMoviesByGenre('Horror', horrorMovies, setHorrorMovies);
-    fetchMoviesByGenre('Comedy', comedyMovies, setComedyMovies);
-  }, []);
 
   return(
     <div className="App">
-      <Navbar />
+      <Router>
+        <Navbar />
 
-      <MovieSlider
-        title='Action'
-        data={actionMovies.data} />
+        <Route
+          path='/'
+          exact
+          component={Main}/>
 
-      <MovieSlider
-        title='Horror'
-        data={horrorMovies.data} />
+        <Route
+          path='/movie/:movieId'
+          exact
+          component={Movie}/>
 
-      <MovieSlider
-        title='Comedy'
-        data={comedyMovies.data} />
+        <Route
+          path='/settings'
+          exact
+          component={Settings}/>
+      </Router>
     </div>
   );
 }

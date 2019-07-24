@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import PropTypes from 'prop-types';
-import Modal from 'react-responsive-modal';
+//import Modal from 'react-responsive-modal';
+import Modal from './modal';
 
 import Preloader from '../preloader/preloader';
 
@@ -66,14 +67,11 @@ const MovieModal = (props) => {
     }
   })
 
-  return (
+  return(
     <Modal
-      open={props.isOpen}
+      isOpen={props.isOpen}
       onClose={handleModalClose}
-      styles={{
-        modal: customModalStyles.modal,
-        closeButton: customModalStyles.closeButton
-      }}>
+      title={modalData.isLoading ? '' : modalData.data.details.title}>
       {modalData.isLoading ?
         <Preloader />:
         <div className='movie-modal-content'>
@@ -132,13 +130,6 @@ const MovieModal = (props) => {
               </table>
             </div>
             <div className='column'>
-              <div>
-                <h1 className='movie-modal-title'>{modalData.data.details.title}</h1>
-                <h5>Released on {new Date(modalData.data.details.release_date).toDateString()}</h5>
-              </div>
-
-              <hr />
-
               <p>
                 {modalData.data.details.overview}
               </p>
@@ -161,13 +152,123 @@ const MovieModal = (props) => {
           </div>
           <hr />
           <div>
-            <h5>Comments</h5>
+            <h5>Reviews</h5>
+            <hr />
+            <div>
+
+            </div>
+
+            <textarea className='textarea' placeholder='If you want, leave a review!' rows='10'></textarea>
           </div>
         </div>
       }
     </Modal>
-  )
+  );
 }
+
+/*
+return (
+  <Modal
+    open={props.isOpen}
+    onClose={handleModalClose}
+    styles={{
+      modal: customModalStyles.modal,
+      closeButton: customModalStyles.closeButton
+    }}>
+    {modalData.isLoading ?
+      <Preloader />:
+      <div className='movie-modal-content'>
+        <div className='columns'>
+          <div className='column is-one-third'>
+            <img
+              src={`${process.env.REACT_APP_MOVIE_IMAGE_ENDPOINT}/w185${modalData.data.details.poster_path}`}
+              alt={modalData.data.details.title}
+              style={{display: 'block', margin: 'auto'}}/>
+            <div style={{display: 'flex', flexDirection: 'row', justifyContent: 'center', marginTop: '5px'}}>
+              <a href='#'>
+                <span className='icon is-medium'>
+                  <span className='fa-stack'>
+                    <i className='fas fa-circle fa-stack-2x'></i>
+                    <i className='fas fa-thumbs-up fa-stack-1x fa-inverse'></i>
+                  </span>
+                </span>
+              </a>
+              &nbsp;&nbsp;
+              <a href='#'>
+                <span className='icon is-medium'>
+                  <span className='fa-stack'>
+                    <i className='fas fa-circle fa-stack-2x'></i>
+                    <i className='fas fa-thumbs-down fa-stack-1x fa-inverse fa-flip-horizontal'></i>
+                  </span>
+                </span>
+              </a>
+            </div>
+
+            <hr />
+
+            <table className='table'>
+              <tbody>
+                <tr>
+                  <td><strong>Status</strong></td>
+                  <td><span className='tag is-success'>{modalData.data.details.status}</span></td>
+                </tr>
+                <tr>
+                  <td><strong>Budget</strong></td>
+                  <td>${modalData.data.details.budget.toLocaleString()}</td>
+                </tr>
+                <tr>
+                  <td><strong>Revenue</strong></td>
+                  <td>${modalData.data.details.revenue.toLocaleString()}</td>
+                </tr>
+                <tr>
+                  <td><strong>Profit</strong></td>
+                  <td>
+                      {modalData.data.details.revenue - modalData.data.details.budget < 0 ?
+                        <span style={{color: 'red'}}>{`-$${(Math.abs(modalData.data.details.revenue - modalData.data.details.budget)).toLocaleString()}`}</span> :
+                        <span style={{color: 'green'}}>{`$${(Math.abs(modalData.data.details.revenue - modalData.data.details.budget)).toLocaleString()}`}</span>
+                      }
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <div className='column'>
+            <div>
+              <h1 className='movie-modal-title'>{modalData.data.details.title}</h1>
+              <h5>Released on {new Date(modalData.data.details.release_date).toDateString()}</h5>
+            </div>
+
+            <hr />
+
+            <p>
+              {modalData.data.details.overview}
+            </p>
+
+            {modalData.data.videos.length > 0 ?
+              <div className='movie-video-container'>
+                <iframe
+                  title={modalData.data.details.title}
+                  width='100%'
+                  height='0'
+                  src={`https://www.youtube.com/embed/${modalData.data.videos[0].key}`}
+                  frameBorder='0'
+                  allowFullScreen
+                  className='movie-video'>
+                </iframe>
+              </div> :
+              ''
+            }
+          </div>
+        </div>
+        <hr />
+        <div>
+          <h5>Comments</h5>
+        </div>
+      </div>
+    }
+  </Modal>
+)
+*/
 
 // default props
 MovieModal.defaultProps = {
