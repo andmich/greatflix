@@ -1,12 +1,12 @@
-.movie-slider-wrapper {
+.movie-slider-container {
   padding: 15px;
 }
 
-.movie-slider-title {
-  text-align: left;
-  margin-bottom: 15px;
-  font-weight: bold;
-  font-size: 30px;
+.movie-slider-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+  text-align: center;
 }
 
 .movie-slides {
@@ -15,7 +15,6 @@
   overflow-x: auto;
   justify-content: flex-start;
   flex-direction: row;
-
   overflow: -moz-scrollbars-none;
   -ms-overflow-style: none;
 }

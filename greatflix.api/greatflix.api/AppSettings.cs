@@ -8,6 +8,12 @@ namespace greatflix.api
     public class AppSettings
     {
         public ApiKeys ApiKeys { get; set; }
+        public ConnectionStrings ConnectionStrings { get; set; }
+    }
+
+    public class ConnectionStrings
+    {
+        public string GreatFlix { get; set; }
     }
 
     public class ApiKeys

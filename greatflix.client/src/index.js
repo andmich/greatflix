@@ -22,6 +22,7 @@ ReactDOM.render(
     domain={process.env.REACT_APP_AUTH0_LOGIN_DOMAIN}
     client_id={process.env.REACT_APP_AUTH0_CLIENT_ID}
     redirect_uri={window.location.origin}
+    audience={process.env.REACT_APP_AUTH0_AUDIENCE}
     onRedirectCallback={onRedirectCallback}>
     <App />
   </Auth0Provider> , document.getElementById('root')
