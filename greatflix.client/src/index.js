@@ -4,6 +4,7 @@ import './index.css';
 import App from './App';
 import * as serviceWorker from './serviceWorker';
 import { Auth0Provider } from './auth-wrapper';
+import { StateProvider } from './contexts/statecontext';
 
 // A function that routes the user to the right place
 // after login
@@ -24,7 +25,9 @@ ReactDOM.render(
     redirect_uri={window.location.origin}
     audience={process.env.REACT_APP_AUTH0_AUDIENCE}
     onRedirectCallback={onRedirectCallback}>
-    <App />
+    <StateProvider>
+      <App />
+    </StateProvider>
   </Auth0Provider> , document.getElementById('root')
   );
 

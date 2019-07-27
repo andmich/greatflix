@@ -9,14 +9,14 @@ import './settings.css'
 import Preloader from '../preloader/preloader';
 
 // context
-import { AccountConsumer } from '../../contexts/accountcontext';
+import { StateConsumer } from '../../contexts/statecontext';
 import FavoriteGenres from '../favorites/favoritegenres';
 
 const Settings = (props) => {
   const { loading, user } = useAuth0();
   return (
-    <AccountConsumer>
-      {props => {
+    <StateConsumer>
+      {([state, func]) => {
         return(
           <div>
             {loading && (
@@ -28,7 +28,6 @@ const Settings = (props) => {
                 <div className='columns'>
                   <div className='column is-one-quarter' style={{textAlign: 'left !important'}}>
                     <div className='container is-fluid'>
-                      {console.log(user)}
                       <div
                         style={{
                           display: 'flex',
@@ -46,25 +45,22 @@ const Settings = (props) => {
                         </h3>
                       </div>
                       <hr />
-                      <div>
-                        <table className='table'>
-                          <tbody>
-                            <tr>
-                              <td><strong>First Name</strong></td>
-                              <td>{user.given_name}</td>
-                            </tr>
-                            <tr>
-                              <td><strong>Last Name</strong></td>
-                              <td>{user.family_name}</td>
-                            </tr>
-                            <tr>
-                              <td><strong>Email</strong></td>
-                              <td>{user.email}</td>
-                            </tr>
-                          </tbody>
-                        </table>
-                        {console.log(user)}
-                      </div>
+                      <table className='table'>
+                        <tbody>
+                          <tr>
+                            <td><strong>First Name</strong></td>
+                            <td>{user.given_name}</td>
+                          </tr>
+                          <tr>
+                            <td><strong>Last Name</strong></td>
+                            <td>{user.family_name}</td>
+                          </tr>
+                          <tr>
+                            <td><strong>Email</strong></td>
+                            <td>{user.email}</td>
+                          </tr>
+                        </tbody>
+                      </table>
                     </div>
                   </div>
                   <div className='column'>
@@ -88,7 +84,7 @@ const Settings = (props) => {
           </div>
         )
       }}
-    </AccountConsumer>
+    </StateConsumer>
   )
 }
 

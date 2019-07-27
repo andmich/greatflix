@@ -9,26 +9,12 @@ import Preloader from '../preloader/preloader';
 import './moviemodal.css';
 
 const MovieModal = (props) => {
-  const customModalStyles = {
-    modal: {
-      width: '90%',
-    },
-    closeButton: {
-      cursor: 'pointer'
-    }
-  }
   const [modalData, setModalData] = useState({ isLoading: true, isFailed: false, data: {
     details: {
       title: ''
     },
     videos: []
   }});
-
-  const [filmDetails, setFilmDetails] = useState({ isLoading: true, isFailed: false, data: {
-
-  }});
-
-  const [filmVideos, setFilmVideos] = useState({ isLoading: true, isFailed: false, data: []});
 
   async function fetchFilm(movieId) {
     const response = await fetch(`${process.env.REACT_APP_ENDPOINT}/movies/${movieId}?appendToResponse=videos`);
@@ -52,7 +38,7 @@ const MovieModal = (props) => {
 
   function handleModalClose() {
     // reset data
-    setModalData({isOpen: false, isLoading: true, isFailed: false, data: {
+    setModalData({ isLoading: true, isFailed: false, data: {
       title: ''
     }});
 
@@ -73,7 +59,7 @@ const MovieModal = (props) => {
       onClose={handleModalClose}
       title={modalData.isLoading ? '' : modalData.data.details.title}>
       {modalData.isLoading ?
-        <Preloader />:
+        <Preloader /> :
         <div className='movie-modal-content'>
           <div className='columns'>
             <div className='column is-one-third'>

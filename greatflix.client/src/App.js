@@ -13,10 +13,11 @@ import Movie from './components/movie/movie';
 import Settings from './components/settings/settings';
 
 // context
-import { AccountProvider } from './contexts/accountcontext';
+import { StateProvider, useGlobalState } from './contexts/statecontext';
 
 const App = (props) => {
   const { getTokenSilently, loading, user } = useAuth0();
+  const [{ account }, dispatch] = useGlobalState();
 
   // we need to see if the logged in user has an account
   const getAccount = async () => {
@@ -35,7 +36,14 @@ const App = (props) => {
           response
             .json()
             .then(data => {
-              console.log(data);
+              dispatch({
+                name: 'account',
+                type: 'update',
+                account: {
+                  id: data.id,
+                  userId: data.userId
+                }
+              });
             })
             .catch(err => {
               console.log(err)
@@ -67,27 +75,24 @@ const App = (props) => {
 
   return(
     <div className="App">
-      <AccountProvider
-        value={loading ? null : {UserId: user.sub}}>
-        <Router>
-          <Navbar />
+      <Router>
+        <Navbar />
 
-          <Route
-            path='/'
-            exact
-            component={Main}/>
+        <Route
+          path='/'
+          exact
+          component={Main}/>
 
-          <Route
-            path='/movie/:movieId'
-            exact
-            component={Movie}/>
+        <Route
+          path='/movie/:movieId'
+          exact
+          component={Movie}/>
 
-          <Route
-            path='/settings'
-            exact
-            component={Settings}/>
-        </Router>
-      </AccountProvider>
+        <Route
+          path='/settings'
+          exact
+          component={Settings}/>
+      </Router>
     </div>
   );
 }
