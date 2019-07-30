@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
+using System.Security.Claims;
 using System.Threading.Tasks;
 using greatflix.dal.Interfaces;
 using Microsoft.AspNetCore.Authorization;
@@ -26,7 +27,7 @@ namespace greatflix.api.Controllers
         [Authorize]
         public IActionResult GetByUserId()
         {
-            var userId = User.FindFirst("http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier");
+            var userId = User.FindFirst(ClaimTypes.NameIdentifier);
 
             if (userId != null)
             {
@@ -63,7 +64,7 @@ namespace greatflix.api.Controllers
         [Authorize]
         public IActionResult Insert()
         {
-            var userId = User.FindFirst("http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier");
+            var userId = User.FindFirst(ClaimTypes.NameIdentifier);
 
             if (userId != null)
             {

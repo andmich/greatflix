@@ -8,7 +8,7 @@ namespace greatflix.dal.Models
     {
         public int Id { get; set; }
         public int AccountId { get; set; }
-        public string GenreId { get; set; }
+        public int GenreId { get; set; }
         public string Source { get; set; }
     }
 }

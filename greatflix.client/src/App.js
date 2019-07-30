@@ -10,13 +10,15 @@ import 'bulma/css/bulma.css'
 import Navbar from './components/navbar/navbar';
 import Main from './components/main/main';
 import Movie from './components/movie/movie';
-import Settings from './components/settings/settings';
+
+// private components
+import Settings from './privatecomponents/settings/settings';
 
 // context
 import { StateProvider, useGlobalState } from './contexts/statecontext';
 
 const App = (props) => {
-  const { getTokenSilently, loading, user } = useAuth0();
+  const { getTokenSilently, loading } = useAuth0();
   const [{ account }, dispatch] = useGlobalState();
 
   // we need to see if the logged in user has an account

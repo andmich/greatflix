@@ -4,6 +4,7 @@ using System.Data.SqlClient;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
+using greatflix.dal;
 using greatflix.dal.Interfaces;
 using greatflix.dal.Repositories;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -68,7 +69,8 @@ namespace greatflix.api
 
             // add config
             var appSettings = Configuration.GetSection("AppSettings").Get<AppSettings>();
-            services.AddTransient<IAccountRepository>((factory) => new AccountRepository(new SqlConnection(appSettings.ConnectionStrings.GreatFlix)));
+            services.AddScoped<IAccountRepository>((factory) => new AccountRepository(new SqlConnection(appSettings.ConnectionStrings.GreatFlix)));
+            services.AddScoped<IUnitOfWork>((factory) => new UnitOfWork(new SqlConnection(appSettings.ConnectionStrings.GreatFlix)));
 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
         }

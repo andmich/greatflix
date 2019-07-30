@@ -7,6 +7,7 @@ namespace greatflix.dal.Interfaces
 {
     public interface IFavoriteGenreRepository
     {
-        List<FavoriteGenre>
+        List<FavoriteGenre> GetByAccountId(int accountId);
+        void Insert(FavoriteGenre favoriteGenreToInsert);
     }
 }

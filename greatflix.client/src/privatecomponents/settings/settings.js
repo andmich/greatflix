@@ -1,29 +1,30 @@
 import React from 'react'
-import PropTypes from 'prop-types'
 import { useAuth0 } from '../../auth-wrapper';
+import { Redirect } from 'react-router-dom';
 
 // css
 import './settings.css'
 
 // components
-import Preloader from '../preloader/preloader';
+import Preloader from '../../components/preloader/preloader';
+import FavoriteGenres from '../../components/favorites/favoritegenres';
 
 // context
-import { StateConsumer } from '../../contexts/statecontext';
-import FavoriteGenres from '../favorites/favoritegenres';
+import { StateConsumer, useGlobalState } from '../../contexts/statecontext';
 
 const Settings = (props) => {
   const { loading, user } = useAuth0();
   return (
     <StateConsumer>
       {([state, func]) => {
+        console.log('hi')
         return(
           <div>
             {loading && (
               <Preloader />
             )}
 
-            {!loading && (
+            {!loading && user && (
               <div className='user-container'>
                 <div className='columns'>
                   <div className='column is-one-quarter' style={{textAlign: 'left !important'}}>
@@ -80,6 +81,13 @@ const Settings = (props) => {
                   </div>
                 </div>
               </div>
+            )}
+
+            {!loading && !user && (
+              <Redirect
+                to={{
+                  pathname: '/'
+                }}/>
             )}
           </div>
         )

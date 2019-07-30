@@ -1,5 +1,7 @@
-import React, { useState } from 'react'
-import PropTypes from 'prop-types'
+import React, { useState } from 'react';
+import PropTypes from 'prop-types';
+import { useGlobalState } from '../../contexts/statecontext';
+import { useAuth0 } from '../../auth-wrapper';
 
 // components
 import Modal from './modal';
@@ -65,9 +67,44 @@ const genres = [{
   ]
 
 const FavoriteGenresModal = (props) => {
-  function addFavoriteGenre(genreId) {
+  const { getTokenSilently } = useAuth0();
+  const [{ favoriteGenres }, dispatch] = useGlobalState();
+
+  const saveFavoriteGenre = async (genreId, source, name) => {
+    const token = await getTokenSilently();
+
+    var response = await fetch(`${process.env.REACT_APP_ENDPOINT}/favorites/genres`, {
+      method: 'POST',
+      headers: {
+        Authorization: `Bearer ${token}`,
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        GenreId: genreId,
+        Source: source
+      })
+    });
+
+    if (response.ok) {
+      // toaster
+      dispatch({
+        name: 'favoriteGenres',
+        type: 'add',
+        newFavoriteGenre: {
+          id: genreId,
+          name: name,
+          source: source
+        }
+      })
+    } else {
+      console.log('error');
+    }
   }
 
+  function addFavoriteGenre(genreId, name) {
+    // update database
+    saveFavoriteGenre(genreId, 'tmdb', name);
+  }
   return (
     <Modal
       isOpen={props.isOpen}
@@ -75,9 +112,9 @@ const FavoriteGenresModal = (props) => {
       title='Genres'>
       {genres.map((item, idx) => (
         <a
-          onClick={() => addFavoriteGenre(item.id)}>
+          key={idx}
+          onClick={() => addFavoriteGenre(item.id, item.name)}>
           <div
-            key={idx}
             className='card'>
             <div className='card-content'>
               <p className='title' style={{
