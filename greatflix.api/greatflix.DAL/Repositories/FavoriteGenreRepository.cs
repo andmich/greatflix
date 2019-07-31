@@ -27,7 +27,7 @@ namespace greatflix.dal.Repositories
                 commandType: CommandType.StoredProcedure).ToList();
         }
 
-        public void Insert(FavoriteGenre favoriteGenreToInsert)
+        public void Create(FavoriteGenre favoriteGenreToInsert)
         {
             _connection.Execute(
                 "sp_gf_insert_favoritegenres",

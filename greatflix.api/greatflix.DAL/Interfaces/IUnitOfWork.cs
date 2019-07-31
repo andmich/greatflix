@@ -8,5 +8,6 @@ namespace greatflix.dal.Interfaces
     {
         IAccountRepository AccountRepository { get; }
         IFavoriteGenreRepository FavoriteGenreRepository { get; }
+        IFavoriteFilmRepository FavoriteFilmRepository { get; }
     }
 }

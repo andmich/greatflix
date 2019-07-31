@@ -26,7 +26,7 @@ namespace greatflix.dal.Repositories
                 commandType: CommandType.StoredProcedure);
         }
 
-        public void Insert(Account newAccount)
+        public void Create(Account newAccount)
         {
             _connection.Execute(
                 "sp_gf_account_insert",

@@ -13,6 +13,7 @@ namespace greatflix.dal
         private IDbConnection _connection;
         private IAccountRepository _accountRepository { get; set; }
         private IFavoriteGenreRepository _favoriteGenreRepository { get; set; }
+        private IFavoriteFilmRepository _favoriteFilmRepository { get; set; }
         public UnitOfWork(SqlConnection connection)
         {
             _connection = connection != null ? connection : throw new ArgumentNullException("connectionString");
@@ -33,6 +34,15 @@ namespace greatflix.dal
             {
                 _favoriteGenreRepository = _favoriteGenreRepository ?? new FavoriteGenreRepository(_connection);
                 return _favoriteGenreRepository;
+            }
+        }
+
+        public IFavoriteFilmRepository FavoriteFilmRepository
+        {
+            get
+            {
+                _favoriteFilmRepository = _favoriteFilmRepository ?? new FavoriteFilmRepository(_connection);
+                return _favoriteFilmRepository;
             }
         }
     }

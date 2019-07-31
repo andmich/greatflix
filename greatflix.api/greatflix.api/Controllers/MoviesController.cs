@@ -1,4 +1,5 @@
-﻿using greatflix.common.Clients.TMDb;
+﻿using greatflix.api.DTOs;
+using greatflix.common.Clients.TMDb;
 using greatflix.common.Clients.TMDb.Models;
 using greatflix.dal.DTOs;
 using Microsoft.AspNetCore.Mvc;

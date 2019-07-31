@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import { useGlobalState } from '../../contexts/statecontext';
 import { useAuth0 } from '../../auth-wrapper';
+import { toast } from 'bulma-toast';
 
 // components
 import Modal from './modal';
@@ -95,8 +96,23 @@ const FavoriteGenresModal = (props) => {
           name: name,
           source: source
         }
-      })
+      });
+
+      toast({
+        message: `Genre added to your favorites`,
+        type: 'is-success',
+        dismissible: true,
+        pauseOnHover: true,
+        animate: { in: 'fadeIn', out: 'fadeOut'}
+      });
     } else {
+      toast({
+        message: `An error occurred`,
+        type: 'is-danger',
+        dismissible: true,
+        pauseOnHover: true,
+        animate: { in: 'fadeIn', out: 'fadeOut'}
+      });
       console.log('error');
     }
   }

@@ -8,16 +8,16 @@ import './settings.css'
 // components
 import Preloader from '../../components/preloader/preloader';
 import FavoriteGenres from '../../components/favorites/favoritegenres';
+import FavoriteMovies from '../../components/favorites/favoritemovies';
 
 // context
-import { StateConsumer, useGlobalState } from '../../contexts/statecontext';
+import { StateConsumer } from '../../contexts/statecontext';
 
 const Settings = (props) => {
   const { loading, user } = useAuth0();
   return (
     <StateConsumer>
       {([state, func]) => {
-        console.log('hi')
         return(
           <div>
             {loading && (
@@ -65,12 +65,8 @@ const Settings = (props) => {
                     </div>
                   </div>
                   <div className='column'>
-                    <div>
-                      <h1 className='title'>Favorite Movies</h1>
+                    <FavoriteMovies />
 
-                      <hr />
-
-                    </div>
                     <div>
                       <h1 className='title'>Favorite TV Shows</h1>
 

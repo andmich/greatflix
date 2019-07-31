@@ -8,6 +8,6 @@ namespace greatflix.dal.Interfaces
     public interface IAccountRepository
     {
         Account GetByUserId(string userId);
-        void Insert(Account newAccount);
+        void Create(Account newAccount);
     }
 }

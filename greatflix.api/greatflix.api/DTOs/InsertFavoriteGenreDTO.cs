@@ -1,8 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
+using System.Linq;
+using System.Threading.Tasks;
 
-namespace greatflix.dal.DTOs
+namespace greatflix.api.DTOs
 {
     public class InsertFavoriteGenreDTO
     {

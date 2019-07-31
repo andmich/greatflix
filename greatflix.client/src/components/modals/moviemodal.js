@@ -1,7 +1,9 @@
 import React, { useState, useEffect, useRef } from 'react';
 import PropTypes from 'prop-types';
-//import Modal from 'react-responsive-modal';
 import Modal from './modal';
+import { useAuth0 } from '../../auth-wrapper';
+import { toast } from 'bulma-toast';
+import { useGlobalState } from '../../contexts/statecontext';
 
 import Preloader from '../preloader/preloader';
 
@@ -15,6 +17,10 @@ const MovieModal = (props) => {
     },
     videos: []
   }});
+
+  const { getTokenSilently } = useAuth0();
+
+  const [{ favoriteFilms }, dispatch] = useGlobalState();
 
   async function fetchFilm(movieId) {
     const response = await fetch(`${process.env.REACT_APP_ENDPOINT}/movies/${movieId}?appendToResponse=videos`);
@@ -36,6 +42,52 @@ const MovieModal = (props) => {
     }
   }
 
+  async function addFavoriteFilm(filmId, movieDetails) {
+    const token = await getTokenSilently();
+
+    let body = {
+      FilmId: filmId,
+      FilmType: 'MOVIE'
+    }
+
+    const response = await fetch(`${process.env.REACT_APP_ENDPOINT}/favorites/films`, {
+      method: 'POST',
+      headers: {
+        Authorization: `Bearer ${token}`,
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(body)
+    });
+
+    if (response.ok) {
+      // way to distinguish between movie and tv when
+      // rendering in ui
+      movieDetails['type'] = 'MOVIE';
+
+      dispatch({
+        name: 'favoriteMovies',
+        type: 'add',
+        newFavoriteMovie: movieDetails
+      });
+
+      toast({
+        message: `Movie added to favorites`,
+        type: 'is-success',
+        dismissible: true,
+        pauseOnHover: true,
+        animate: { in: 'fadeIn', out: 'fadeOut'}
+      });
+    } else {
+      toast({
+        message: `Could not add movie to favorites`,
+        type: 'is-danger',
+        dismissible: true,
+        pauseOnHover: true,
+        animate: { in: 'fadeIn', out: 'fadeOut'}
+      });
+    }
+  }
+
   function handleModalClose() {
     // reset data
     setModalData({ isLoading: true, isFailed: false, data: {
@@ -44,6 +96,10 @@ const MovieModal = (props) => {
 
     // close modal
     props.onClose();
+  }
+
+  function handleAddToFavorites(filmId, movieDetails) {
+    addFavoriteFilm(filmId, movieDetails);
   }
 
   useEffect(() => {
@@ -68,22 +124,10 @@ const MovieModal = (props) => {
                 alt={modalData.data.details.title}
                 style={{display: 'block', margin: 'auto'}}/>
               <div style={{display: 'flex', flexDirection: 'row', justifyContent: 'center', marginTop: '5px'}}>
-                <a href='#'>
-                  <span className='icon is-medium'>
-                    <span className='fa-stack'>
-                      <i className='fas fa-circle fa-stack-2x'></i>
-                      <i className='fas fa-thumbs-up fa-stack-1x fa-inverse'></i>
-                    </span>
-                  </span>
-                </a>
-                &nbsp;&nbsp;
-                <a href='#'>
-                  <span className='icon is-medium'>
-                    <span className='fa-stack'>
-                      <i className='fas fa-circle fa-stack-2x'></i>
-                      <i className='fas fa-thumbs-down fa-stack-1x fa-inverse fa-flip-horizontal'></i>
-                    </span>
-                  </span>
+                <a
+                  className='button is-info'
+                  onClick={() => handleAddToFavorites(props.movieId, modalData.data.details)}>
+                  Add to Favorites
                 </a>
               </div>
 

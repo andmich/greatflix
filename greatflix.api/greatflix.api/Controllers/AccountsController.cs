@@ -82,7 +82,7 @@ namespace greatflix.api.Controllers
                 {
                     try
                     {
-                        _accountRepository.Insert(new dal.Models.Account
+                        _accountRepository.Create(new dal.Models.Account
                         {
                             UserId = userId.Value
                         });
