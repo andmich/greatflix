@@ -5,7 +5,8 @@ export const favoriteMoviesReducer = (favoriteMoviesState, action) => {
       newFavoriteMoviesState.push(action.newFavoriteMovie);
       return newFavoriteMoviesState;
     case 'put':
-      break;
+      newFavoriteMoviesState = action.newFavoriteMovies;
+      return newFavoriteMoviesState;
     case 'update':
       break;
     case 'delete':

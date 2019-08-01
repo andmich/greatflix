@@ -7,11 +7,13 @@ import MovieSlider from '../movieslider/movieslider';
 // globals
 import { BasicMovieGenreList } from '../../globals';
 
-const Main = (props) => {
+const Movies = (props) => {
   const [popularMovies, setPopularMovies] = useState({ isLoading: true, isFailed: false, data: []});
   const [actionMovies, setActionMovies] = useState({ isLoading: true, isFailed: false, data: []});
   const [horrorMovies, setHorrorMovies] = useState({ isLoading: true, isFailed: false, data: []});
   const [comedyMovies, setComedyMovies] = useState({ isLoading: true, isFailed: false, data: []});
+
+  const controller = new AbortController();
 
   async function fetchPopularMovies() {
     const response = await fetch(`${process.env.REACT_APP_ENDPOINT}/movies/popular?page=1`);
@@ -34,7 +36,9 @@ const Main = (props) => {
   }
 
   async function fetchMoviesByGenre(genre, store, setFunction) {
-    const response = await fetch(`${process.env.REACT_APP_ENDPOINT}/movies/discover?page=1&genres=${BasicMovieGenreList[genre]}`);
+    const response = await fetch(`${process.env.REACT_APP_ENDPOINT}/movies/discover?page=1&genres=${BasicMovieGenreList[genre]}`, {
+      signal: controller.signal
+    });
 
     response
       .json()
@@ -52,6 +56,10 @@ const Main = (props) => {
     fetchMoviesByGenre('Action', actionMovies, setActionMovies);
     fetchMoviesByGenre('Horror', horrorMovies, setHorrorMovies);
     fetchMoviesByGenre('Comedy', comedyMovies, setComedyMovies);
+
+    return () => {
+      controller.abort();
+    }
   }, []);
 
   return (
@@ -71,4 +79,4 @@ const Main = (props) => {
   )
 }
 
-export default Main;
+export default Movies;

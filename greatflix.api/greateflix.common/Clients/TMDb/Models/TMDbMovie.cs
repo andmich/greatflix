@@ -12,7 +12,7 @@ namespace greatflix.common.Clients.TMDb.Models
         public long budget { get; set; }
         public string homepage { get; set; }
         public long revenue { get; set; }
-        public int runtime { get; set; }
+        public int? runtime { get; set; }
         public string status { get; set; }
         public double vote_average { get; set; }
         public int vote_count { get; set; }

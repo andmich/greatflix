@@ -5,6 +5,8 @@ import App from './App';
 import * as serviceWorker from './serviceWorker';
 import { Auth0Provider } from './auth-wrapper';
 import { StateProvider } from './contexts/statecontext';
+import { BrowserRouter as Router } from 'react-router-dom';
+import { withRouter } from 'react-router';
 
 // A function that routes the user to the right place
 // after login
@@ -18,15 +20,20 @@ const onRedirectCallback = appState => {
   );
 };
 
+const AppWithRouter = withRouter(App);
+
 ReactDOM.render(
   <Auth0Provider
     domain={process.env.REACT_APP_AUTH0_LOGIN_DOMAIN}
     client_id={process.env.REACT_APP_AUTH0_CLIENT_ID}
-    redirect_uri={window.location.origin}
+    redirect_uri={`${window.location.origin}`}
     audience={process.env.REACT_APP_AUTH0_AUDIENCE}
     onRedirectCallback={onRedirectCallback}>
     <StateProvider>
-      <App />
+      {console.log(`location ${window.location.origin}`)}
+      <Router>
+        <AppWithRouter />
+      </Router>
     </StateProvider>
   </Auth0Provider> , document.getElementById('root')
   );

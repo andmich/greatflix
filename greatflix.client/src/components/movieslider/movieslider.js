@@ -11,11 +11,7 @@ const MovieSlider = (props) => {
   // unique id for slider
   const uniqueId = (Math.random() * 1000).toFixed(0);
 
-  // get width of movie slide
-  let movieSlides = document.getElementsByClassName('movie-slide')
-
   const [modalState, setModalState] = useState({isOpen: false, movieId: null});
-  const currentPos = useRef();
 
   function handleModalClose(cb) {
     setModalState({isOpen: false, movieId: null})

@@ -1,9 +1,9 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import Modal from './modal';
 import { useAuth0 } from '../../auth-wrapper';
 import { toast } from 'bulma-toast';
-import { useGlobalState } from '../../contexts/statecontext';
+import { useGlobalState, StateConsumer } from '../../contexts/statecontext';
 
 import Preloader from '../preloader/preloader';
 
@@ -42,7 +42,7 @@ const MovieModal = (props) => {
     }
   }
 
-  async function addFavoriteFilm(filmId, movieDetails) {
+  async function addFavoriteFilm(filmId) {
     const token = await getTokenSilently();
 
     let body = {
@@ -60,14 +60,12 @@ const MovieModal = (props) => {
     });
 
     if (response.ok) {
-      // way to distinguish between movie and tv when
-      // rendering in ui
-      movieDetails['type'] = 'MOVIE';
-
       dispatch({
         name: 'favoriteMovies',
         type: 'add',
-        newFavoriteMovie: movieDetails
+        newFavoriteMovie: {
+          filmId: filmId
+        }
       });
 
       toast({
@@ -98,8 +96,8 @@ const MovieModal = (props) => {
     props.onClose();
   }
 
-  function handleAddToFavorites(filmId, movieDetails) {
-    addFavoriteFilm(filmId, movieDetails);
+  function handleAddToFavorites(filmId) {
+    addFavoriteFilm(filmId);
   }
 
   useEffect(() => {
@@ -114,84 +112,94 @@ const MovieModal = (props) => {
       isOpen={props.isOpen}
       onClose={handleModalClose}
       title={modalData.isLoading ? '' : modalData.data.details.title}>
-      {modalData.isLoading ?
-        <Preloader /> :
-        <div className='movie-modal-content'>
-          <div className='columns'>
-            <div className='column is-one-third'>
-              <img
-                src={`${process.env.REACT_APP_MOVIE_IMAGE_ENDPOINT}/w185${modalData.data.details.poster_path}`}
-                alt={modalData.data.details.title}
-                style={{display: 'block', margin: 'auto'}}/>
-              <div style={{display: 'flex', flexDirection: 'row', justifyContent: 'center', marginTop: '5px'}}>
-                <a
-                  className='button is-info'
-                  onClick={() => handleAddToFavorites(props.movieId, modalData.data.details)}>
-                  Add to Favorites
-                </a>
+      <StateConsumer>
+        {([{favoriteMovies}]) => (
+          modalData.isLoading ?
+          <Preloader /> :
+          <div className='movie-modal-content'>
+            <div className='columns'>
+              <div className='column is-one-third'>
+                <img
+                  src={`${process.env.REACT_APP_MOVIE_IMAGE_ENDPOINT}/w185${modalData.data.details.poster_path}`}
+                  alt={modalData.data.details.title}
+                  style={{display: 'block', margin: 'auto'}}/>
+                <div style={{display: 'flex', flexDirection: 'row', justifyContent: 'center', marginTop: '5px'}}>
+                  {favoriteMovies.filter(movie => movie.filmId === props.movieId).length > 0 ?
+                    <a
+                      className='button is-danger'
+                      onClick={() => handleAddToFavorites(props.movieId)}>
+                      Remove from Favorites
+                    </a> :
+                    <a
+                      className='button is-success'
+                      onClick={() => handleAddToFavorites(props.movieId)}>
+                      Add to Favorites
+                    </a>
+                  }
+                </div>
+
+                <hr />
+
+                <table className='table'>
+                  <tbody>
+                    <tr>
+                      <td><strong>Status</strong></td>
+                      <td><span className='tag is-success'>{modalData.data.details.status}</span></td>
+                    </tr>
+                    <tr>
+                      <td><strong>Budget</strong></td>
+                      <td>${modalData.data.details.budget.toLocaleString()}</td>
+                    </tr>
+                    <tr>
+                      <td><strong>Revenue</strong></td>
+                      <td>${modalData.data.details.revenue.toLocaleString()}</td>
+                    </tr>
+                    <tr>
+                      <td><strong>Profit</strong></td>
+                      <td>
+                          {modalData.data.details.revenue - modalData.data.details.budget < 0 ?
+                            <span style={{color: 'red'}}>{`-$${(Math.abs(modalData.data.details.revenue - modalData.data.details.budget)).toLocaleString()}`}</span> :
+                            <span style={{color: 'green'}}>{`$${(Math.abs(modalData.data.details.revenue - modalData.data.details.budget)).toLocaleString()}`}</span>
+                          }
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
               </div>
+              <div className='column'>
+                <p>
+                  {modalData.data.details.overview}
+                </p>
 
-              <hr />
-
-              <table className='table'>
-                <tbody>
-                  <tr>
-                    <td><strong>Status</strong></td>
-                    <td><span className='tag is-success'>{modalData.data.details.status}</span></td>
-                  </tr>
-                  <tr>
-                    <td><strong>Budget</strong></td>
-                    <td>${modalData.data.details.budget.toLocaleString()}</td>
-                  </tr>
-                  <tr>
-                    <td><strong>Revenue</strong></td>
-                    <td>${modalData.data.details.revenue.toLocaleString()}</td>
-                  </tr>
-                  <tr>
-                    <td><strong>Profit</strong></td>
-                    <td>
-                        {modalData.data.details.revenue - modalData.data.details.budget < 0 ?
-                          <span style={{color: 'red'}}>{`-$${(Math.abs(modalData.data.details.revenue - modalData.data.details.budget)).toLocaleString()}`}</span> :
-                          <span style={{color: 'green'}}>{`$${(Math.abs(modalData.data.details.revenue - modalData.data.details.budget)).toLocaleString()}`}</span>
-                        }
-                    </td>
-                  </tr>
-                </tbody>
-              </table>
+                {modalData.data.videos.length > 0 ?
+                  <div className='movie-video-container'>
+                    <iframe
+                      title={modalData.data.details.title}
+                      width='100%'
+                      height='0'
+                      src={`https://www.youtube.com/embed/${modalData.data.videos[0].key}`}
+                      frameBorder='0'
+                      allowFullScreen
+                      className='movie-video'>
+                    </iframe>
+                  </div> :
+                  ''
+                }
+              </div>
             </div>
-            <div className='column'>
-              <p>
-                {modalData.data.details.overview}
-              </p>
-
-              {modalData.data.videos.length > 0 ?
-                <div className='movie-video-container'>
-                  <iframe
-                    title={modalData.data.details.title}
-                    width='100%'
-                    height='0'
-                    src={`https://www.youtube.com/embed/${modalData.data.videos[0].key}`}
-                    frameBorder='0'
-                    allowFullScreen
-                    className='movie-video'>
-                  </iframe>
-                </div> :
-                ''
-              }
-            </div>
-          </div>
-          <hr />
-          <div>
-            <h5>Reviews</h5>
             <hr />
             <div>
+              <h5>Reviews</h5>
+              <hr />
+              <div>
 
+              </div>
+
+              <textarea className='textarea' placeholder='If you want, leave a review!' rows='10'></textarea>
             </div>
-
-            <textarea className='textarea' placeholder='If you want, leave a review!' rows='10'></textarea>
           </div>
-        </div>
-      }
+        )}
+      </StateConsumer>
     </Modal>
   );
 }

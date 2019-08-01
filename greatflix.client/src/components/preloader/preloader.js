@@ -5,9 +5,9 @@ import './preloader.css';
 
 const PreLoader = (props) => {
   return (
-    <div className='loading'>
-      <div className='loader'/>
-    </div>
+    <span className='loading'>
+      <span className='loader'/>
+    </span>
   )
 }
 

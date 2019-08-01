@@ -1,18 +1,18 @@
-import React, { useState } from 'react'
-import PropTypes from 'prop-types'
-import { useAuth0, user } from '../../auth-wrapper';
+import React, { useState } from 'react';
+import PropTypes from 'prop-types';
+import { useAuth0 } from '../../auth-wrapper';
 import { Link } from 'react-router-dom';
 
 const Navbar = (props) => {
   const { isAuthenticated, loginWithRedirect, logout, loading, user } = useAuth0();
   const [userDropdownState, setUserDropdownState] = useState(false);
-
+  
   return (
     <nav className='navbar' role='navigation' aria-label='main navigation'>
       <div className='navbar-brand'>
         <Link
           className='navbar-item'
-          to='/'>
+          to='/movies'>
           <h1>greatFLIX</h1>
         </Link>
 
@@ -24,6 +24,18 @@ const Navbar = (props) => {
       </div>
 
       <div className='navbar-menu'>
+        <div className='navbar-start'>
+          <Link
+            className='navbar-item'
+            to='/movies'>
+            Movies
+          </Link>
+          <Link
+            className='navbar-item'
+            to='/shows'>
+            Shows
+          </Link>
+        </div>
         <div className='navbar-end'>
           {!isAuthenticated && (
             <div className='navbar-item'>
@@ -74,29 +86,4 @@ const Navbar = (props) => {
     </nav>
   );
 }
-/*
-<div className='navbar-start'>
-  <div className='navbar-item has-dropdown is-hoverable'>
-    <a className='navbar-link'>
-      More
-    </a>
-
-    <div className='navbar-dropdown'>
-      <a className='navbar-item'>
-        About
-      </a>
-      <a className='navbar-item'>
-        Jobs
-      </a>
-      <a className='navbar-item'>
-        Contact
-      </a>
-      <hr className='navbar-divider' />
-      <a className='navbar-item'>
-        Report an issue
-      </a>
-    </div>
-  </div>
-</div>
-*/
 export default Navbar;

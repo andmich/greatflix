@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { BrowserRouter as Router, Route } from 'react-router-dom';
+import { Route, Redirect } from 'react-router-dom';
 import { useAuth0 } from './auth-wrapper';
 
 // css
@@ -8,20 +8,21 @@ import 'bulma/css/bulma.css'
 
 // compnents
 import Navbar from './components/navbar/navbar';
-import Main from './components/main/main';
-import Movie from './components/movie/movie';
+import Movies from './components/main/movies';
+import Shows from './components/main/shows';
+import Preloader from './components/preloader/preloader';
 
 // private components
 import Settings from './privatecomponents/settings/settings';
 
 // context
-import { StateProvider, useGlobalState } from './contexts/statecontext';
+import { useGlobalState } from './contexts/statecontext';
 
 // globals
-import { TMDbGenres } from './globals';
+import { TMDbMovieGenres } from './globals';
 
 const App = (props) => {
-  const { getTokenSilently, loading } = useAuth0();
+  const { getTokenSilently, loading, isAuthenticated } = useAuth0();
   const [{ account }, dispatch] = useGlobalState();
 
   // we need to see if the logged in user has an account
@@ -96,7 +97,7 @@ const App = (props) => {
             res.forEach((item) => {
               data.push({
                 id: item.genreId,
-                name: TMDbGenres.filter(data => data.id === item.genreId)[0].name,
+                name: TMDbMovieGenres.filter(data => data.id === item.genreId)[0].name,
                 source: 'tmdb'
               })
             })
@@ -131,13 +132,13 @@ const App = (props) => {
             let favoriteMovies = []
             data.forEach((item) => {
               favoriteMovies.push({
-                filmId: item.filmId,
-                details: null
+                filmId: item.filmId
               })
-            })
+            });
+
             dispatch({
               name: 'favoriteMovies',
-              type: 'add',
+              type: 'put',
               newFavoriteMovies: favoriteMovies
             });
           });
@@ -155,24 +156,37 @@ const App = (props) => {
 
   return(
     <div className="App">
-      <Router>
-        <Navbar />
+      {loading && (
+        <Preloader />
+      )}
 
-        <Route
-          path='/'
-          exact
-          component={Main}/>
+      {!loading && (
+        <div>
+          <Navbar />
 
-        <Route
-          path='/movie/:movieId'
-          exact
-          component={Movie}/>
+          <Route
+            path='/movies'
+            exact
+            component={Movies}/>
 
-        <Route
-          path='/settings'
-          exact
-          component={Settings}/>
-      </Router>
+          <Route
+            path='/shows'
+            exact
+            component={Shows}/>
+
+          <Route
+            path='/settings'
+            exact
+            component={Settings}/>
+
+          {props.match.path === '/'  && (
+            <Redirect
+              to={{
+                pathname: '/movies'
+              }}/>
+          )}
+        </div>
+      )}
     </div>
   );
 }
