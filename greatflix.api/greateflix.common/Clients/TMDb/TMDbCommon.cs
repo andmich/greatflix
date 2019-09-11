@@ -8,8 +8,8 @@ namespace greatflix.common.Clients.TMDb
     {
         public enum FilmType
         {
-            movie,
-            tv
+            movie = 1,
+            tv = 2
         }
     }
 }

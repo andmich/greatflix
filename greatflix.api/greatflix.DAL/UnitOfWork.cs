@@ -1,5 +1,6 @@
 ﻿using greatflix.dal.Interfaces;
 using greatflix.dal.Repositories;
+using MySql.Data.MySqlClient;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -11,21 +12,11 @@ namespace greatflix.dal
     public class UnitOfWork : IUnitOfWork
     {
         private IDbConnection _connection;
-        private IAccountRepository _accountRepository { get; set; }
         private IFavoriteGenreRepository _favoriteGenreRepository { get; set; }
         private IFavoriteFilmRepository _favoriteFilmRepository { get; set; }
-        public UnitOfWork(SqlConnection connection)
+        public UnitOfWork(MySqlConnection connection)
         {
             _connection = connection != null ? connection : throw new ArgumentNullException("connectionString");
-        }
-
-        public IAccountRepository AccountRepository
-        {
-            get
-            {
-                _accountRepository = _accountRepository ?? new AccountRepository(_connection);
-                return _accountRepository;
-            }
         }
 
         public IFavoriteGenreRepository FavoriteGenreRepository

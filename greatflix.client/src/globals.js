@@ -16,6 +16,14 @@ export const BasicMovieGenreList = {
   'Drama': 18,
 };
 
+export const BasicTVShowGenreList = {
+  'Sci-Fi & Fantasy': 10765,
+  'Action': 28,
+  'Crime': 80,
+  'Comedy': 35,
+  'Drama': 18,
+}
+
 export const TMDbMovieGenres = [{
     id: 28,
     name: 'Action',

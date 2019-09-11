@@ -25,55 +25,6 @@ const App = (props) => {
   const { getTokenSilently, loading, isAuthenticated } = useAuth0();
   const [{ account }, dispatch] = useGlobalState();
 
-  // we need to see if the logged in user has an account
-  const getAccount = async () => {
-    if (loading) {
-      console.log('user loading');
-    } else {
-      try {
-        const token = await getTokenSilently();
-        const response = await fetch(`${process.env.REACT_APP_ENDPOINT}/accounts`, {
-          headers: {
-            Authorization: `Bearer ${token}`
-          }
-        });
-
-        if (response.ok) {
-          response
-            .json()
-            .then(data => {
-              dispatch({
-                name: 'account',
-                type: 'update',
-                account: {
-                  id: data.id,
-                  userId: data.userId
-                }
-              });
-            })
-            .catch(err => {
-              console.log(err)
-            })
-        } else {
-          if (response.status === 404) {
-            // attempt to add account
-            const post_response = await fetch(`${process.env.REACT_APP_ENDPOINT}/accounts`, {
-              method: 'POST',
-              headers: {
-                Authorization: `Bearer ${token}`
-              }
-            });
-
-            if (!post_response.ok) {
-              console.log(post_response);
-            }
-          }
-        }
-      } catch (error) {
-        console.log(`Error fetching token ${error}`);
-      }
-    }
-  }
 
   const getFavoriteGenres = async () => {
     if (loading) {
@@ -96,8 +47,8 @@ const App = (props) => {
 
             res.forEach((item) => {
               data.push({
-                id: item.genreId,
-                name: TMDbMovieGenres.filter(data => data.id === item.genreId)[0].name,
+                id: item.genre_id,
+                name: TMDbMovieGenres.filter(data => data.id === item.genre_id)[0].name,
                 source: 'tmdb'
               })
             })
@@ -132,7 +83,7 @@ const App = (props) => {
             let favoriteMovies = []
             data.forEach((item) => {
               favoriteMovies.push({
-                filmId: item.filmId
+                filmId: item.film_id
               })
             });
 
@@ -149,7 +100,6 @@ const App = (props) => {
   }
 
   useEffect(() => {
-    getAccount();
     getFavoriteGenres();
     getFavoriteMovies();
   }, [loading])

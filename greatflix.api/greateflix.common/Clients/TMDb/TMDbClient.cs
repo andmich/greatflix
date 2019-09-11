@@ -168,6 +168,26 @@ namespace greatflix.common.Clients.TMDb
 
         #endregion
 
+        #region TV Shows 
+        public TMDbResponse<TMDbTVShow> DiscoverTVShows(List<int> genres, int? page, string language = "en-US", string region = "US")
+        {
+            var uriQuery = $"api_key={_apiKey}&page={page}&with_genres={string.Join(',', genres.ToArray())}&language={language}&region={region}";
+            var getResponse = _httpClient.GetAsync($"{_baseAddress}/discover/tv?{uriQuery}");
+            getResponse.Wait();
+
+            var result = getResponse.Result;
+
+            if (result.IsSuccessStatusCode)
+            {
+                return JsonConvert.DeserializeObject<TMDbResponse<TMDbTVShow>>(result.Content.ReadAsStringAsync().Result);
+            }
+            else
+            {
+                throw new Exception(result.Content.ReadAsStringAsync().Result);
+            }
+        }
+        #endregion
+
         bool disposed = false;
 
         public void Dispose()

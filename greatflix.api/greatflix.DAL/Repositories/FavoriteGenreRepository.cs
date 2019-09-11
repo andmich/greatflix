@@ -16,13 +16,13 @@ namespace greatflix.dal.Repositories
         {
         }
 
-        public List<FavoriteGenre> GetByAccountId(int accountId)
+        public List<FavoriteGenre> GetByUserId(string userId)
         {
             return _connection.Query<FavoriteGenre>(
-                "sp_gf_get_favoritegenres_by_account_id",
+                "sp_gf_get_favorite_genres_by_user_id",
                 new
                 {
-                    account_id = accountId
+                    p_user_id = userId
                 },
                 commandType: CommandType.StoredProcedure).ToList();
         }
@@ -30,12 +30,12 @@ namespace greatflix.dal.Repositories
         public void Create(FavoriteGenre favoriteGenreToInsert)
         {
             _connection.Execute(
-                "sp_gf_insert_favoritegenres",
+                "sp_gf_insert_favorite_genres",
                 new
                 {
-                    account_id = favoriteGenreToInsert.AccountId,
-                    genre_id = favoriteGenreToInsert.GenreId,
-                    source = favoriteGenreToInsert.Source
+                    p_user_id = favoriteGenreToInsert.user_id,
+                    p_genre_id = favoriteGenreToInsert.genre_id,
+                    p_source = favoriteGenreToInsert.source
                 },
                 commandType: CommandType.StoredProcedure);
         }

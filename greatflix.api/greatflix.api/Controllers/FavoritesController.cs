@@ -29,11 +29,10 @@ namespace greatflix.api.Controllers
         public IActionResult GetGenres()
         {
             var userId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
-            var account = _unitOfWork.AccountRepository.GetByUserId(userId);
 
-            if (account != null)
+            if (!string.IsNullOrEmpty(userId))
             {
-                var favoriteGenres = _unitOfWork.FavoriteGenreRepository.GetByAccountId(account.Id);
+                var favoriteGenres = _unitOfWork.FavoriteGenreRepository.GetByUserId(userId);
 
                 return Ok(favoriteGenres);
             }
@@ -49,17 +48,16 @@ namespace greatflix.api.Controllers
         public IActionResult InsertGenre([FromBody] InsertFavoriteGenreDTO insertFavoriteGenreDTO)
         {
             var userId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
-            var account = _unitOfWork.AccountRepository.GetByUserId(userId);
 
-            if (account != null)
+            if (!string.IsNullOrEmpty(userId))
             {
                 try
                 {
                     _unitOfWork.FavoriteGenreRepository.Create(new dal.Models.FavoriteGenre
                     {
-                        AccountId = account.Id,
-                        GenreId = insertFavoriteGenreDTO.GenreId,
-                        Source = insertFavoriteGenreDTO.Source
+                        user_id = userId,
+                        genre_id = insertFavoriteGenreDTO.GenreId,
+                        source = insertFavoriteGenreDTO.Source
                     });
 
                     return Ok();
@@ -86,14 +84,8 @@ namespace greatflix.api.Controllers
 
             if (!string.IsNullOrEmpty(userId))
             {
-                var account = _unitOfWork.AccountRepository.GetByUserId(userId);
 
-                if (account == null)
-                {
-                    return Unauthorized();
-                }
-
-                var favoriteMovies = _unitOfWork.FavoriteFilmRepository.GetByAccountId(account.Id, (int)filmType);
+                var favoriteMovies = _unitOfWork.FavoriteFilmRepository.GetByUserId(userId, (int)filmType);
 
                 return Ok(favoriteMovies);
             }
@@ -112,19 +104,13 @@ namespace greatflix.api.Controllers
             {
                 if (insertFavoriteFilmDTO.FilmType.HasValue)
                 {
-                    var account = _unitOfWork.AccountRepository.GetByUserId(userId);
-
-                    if (account == null)
-                    {
-                        return Unauthorized();
-                    }
 
                     _unitOfWork.FavoriteFilmRepository.Create(new dal.Models.FavoriteFilm
                     {
-                        AccountId = account.Id,
-                        FilmId = insertFavoriteFilmDTO.FilmId,
-                        FilmTypeId = (int)insertFavoriteFilmDTO.FilmType.Value,
-                        Source = "tmdb"
+                        user_id = userId,
+                        film_id = insertFavoriteFilmDTO.FilmId,
+                        film_type_id = (int)insertFavoriteFilmDTO.FilmType.Value,
+                        source = "tmdb"
                     });
 
                     return Ok();

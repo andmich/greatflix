@@ -7,7 +7,7 @@ namespace greatflix.dal.Interfaces
 {
     public interface IFavoriteFilmRepository
     {
-        List<FavoriteFilm> GetByAccountId(int accountId, int? filmTypeId = null);
+        List<FavoriteFilm> GetByUserId(string userId, int? filmTypeId = null);
         void Create(FavoriteFilm newFavoriteFilm);
     }
 }

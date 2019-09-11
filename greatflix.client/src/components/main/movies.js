@@ -2,10 +2,13 @@ import React, { useState, useEffect } from 'react'
 import PropTypes from 'prop-types'
 
 // components
-import MovieSlider from '../movieslider/movieslider';
+import MovieSlider from '../slider/movieslider';
+import PreLoader from '../preloader/preloader';
 
 // globals
 import { BasicMovieGenreList } from '../../globals';
+
+import './main.css';
 
 const Movies = (props) => {
   const [popularMovies, setPopularMovies] = useState({ isLoading: true, isFailed: false, data: []});
@@ -64,17 +67,32 @@ const Movies = (props) => {
 
   return (
     <div>
-      <MovieSlider
-        title='Action'
-        data={actionMovies.data} />
+      <h1 className='title slider-title'>Action</h1>
 
-      <MovieSlider
-        title='Horror'
-        data={horrorMovies.data} />
+      <PreLoader
+        isLoading={actionMovies.isLoading}
+        component={
+          <MovieSlider
+            data={actionMovies.data}/>
+        }/>
 
-      <MovieSlider
-        title='Comedy'
-        data={comedyMovies.data} />
+      <h1 className='title slider-title'>Horror</h1>
+
+      <PreLoader
+        isLoading={horrorMovies.isLoading}
+        component={
+          <MovieSlider
+            data={horrorMovies.data} />
+        }/>
+
+      <h1 className='title slider-title'>Comedy</h1>
+
+      <PreLoader
+        isLoading={comedyMovies.isLoading}
+        component={
+          <MovieSlider
+            data={comedyMovies.data} />
+        }/>
     </div>
   )
 }

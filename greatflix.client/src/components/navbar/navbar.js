@@ -6,7 +6,7 @@ import { Link } from 'react-router-dom';
 const Navbar = (props) => {
   const { isAuthenticated, loginWithRedirect, logout, loading, user } = useAuth0();
   const [userDropdownState, setUserDropdownState] = useState(false);
-  
+
   return (
     <nav className='navbar' role='navigation' aria-label='main navigation'>
       <div className='navbar-brand'>
@@ -33,7 +33,7 @@ const Navbar = (props) => {
           <Link
             className='navbar-item'
             to='/shows'>
-            Shows
+            TV Shows
           </Link>
         </div>
         <div className='navbar-end'>

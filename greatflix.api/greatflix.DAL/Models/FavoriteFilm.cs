@@ -6,10 +6,10 @@ namespace greatflix.dal.Models
 {
     public class FavoriteFilm
     {
-        public int Id { get; set; }
-        public int AccountId { get; set; }
-        public int FilmId { get; set; }
-        public int FilmTypeId { get; set; }
-        public string Source { get; set; }
+        public int id { get; set; }
+        public string user_id { get; set; }
+        public int film_id { get; set; }
+        public int film_type_id { get; set; }
+        public string source { get; set; }
     }
 }

@@ -19,25 +19,25 @@ namespace greatflix.dal.Repositories
         public void Create(FavoriteFilm newFavoriteFilm)
         {
             _connection.Execute(
-                "sp_gf_insert_favoritefilm",
+                "sp_gf_insert_favorite_film",
                 new
                 {
-                    account_id = newFavoriteFilm.AccountId,
-                    film_id = newFavoriteFilm.FilmId,
-                    film_type_id = newFavoriteFilm.FilmTypeId,
-                    source = newFavoriteFilm.Source
+                    p_user_id = newFavoriteFilm.user_id,
+                    p_film_id = newFavoriteFilm.film_id,
+                    p_film_type_id = newFavoriteFilm.film_type_id,
+                    p_source = newFavoriteFilm.source
                 },
                 commandType: CommandType.StoredProcedure);
         }
 
-        public List<FavoriteFilm> GetByAccountId(int accountId, int? filmTypeId = null)
+        public List<FavoriteFilm> GetByUserId(string userId, int? filmTypeId = null)
         {
             return _connection.Query<FavoriteFilm>(
-                "sp_gf_get_favoritefilms_by_account_id",
+                "sp_gf_get_favorite_films_by_user_id",
                 new
                 {
-                    account_id = accountId,
-                    film_type_id = filmTypeId
+                    p_user_id = userId,
+                    p_film_type_id = filmTypeId
                 },
                 commandType: CommandType.StoredProcedure).ToList();
         }

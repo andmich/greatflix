@@ -15,6 +15,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
+using MySql.Data.MySqlClient;
 
 namespace greatflix.api
 {
@@ -69,8 +70,7 @@ namespace greatflix.api
 
             // add config
             var appSettings = Configuration.GetSection("AppSettings").Get<AppSettings>();
-            services.AddScoped<IAccountRepository>((factory) => new AccountRepository(new SqlConnection(appSettings.ConnectionStrings.GreatFlix)));
-            services.AddScoped<IUnitOfWork>((factory) => new UnitOfWork(new SqlConnection(appSettings.ConnectionStrings.GreatFlix)));
+            services.AddScoped<IUnitOfWork>((factory) => new UnitOfWork(new MySqlConnection(appSettings.ConnectionStrings.GreatFlix)));
 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
         }
