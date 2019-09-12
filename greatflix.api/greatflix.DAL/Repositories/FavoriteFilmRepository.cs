@@ -11,8 +11,8 @@ namespace greatflix.dal.Repositories
 {
     public class FavoriteFilmRepository : RepositoryBase, IFavoriteFilmRepository
     {
-        public FavoriteFilmRepository(IDbConnection connection) 
-            : base(connection)
+        public FavoriteFilmRepository(IDbTransaction transaction) 
+            : base(transaction)
         {
         }
 
@@ -27,7 +27,8 @@ namespace greatflix.dal.Repositories
                     p_film_type_id = newFavoriteFilm.film_type_id,
                     p_source = newFavoriteFilm.source
                 },
-                commandType: CommandType.StoredProcedure);
+                commandType: CommandType.StoredProcedure,
+                transaction: _transaction);
         }
 
         public List<FavoriteFilm> GetByUserId(string userId, int? filmTypeId = null)
@@ -39,7 +40,8 @@ namespace greatflix.dal.Repositories
                     p_user_id = userId,
                     p_film_type_id = filmTypeId
                 },
-                commandType: CommandType.StoredProcedure).ToList();
+                commandType: CommandType.StoredProcedure,
+                transaction: _transaction).ToList();
         }
     }
 }

@@ -11,19 +11,39 @@ namespace greatflix.dal
 {
     public class UnitOfWork : IUnitOfWork
     {
-        private IDbConnection _connection;
+        private readonly IDbConnection _connection;
+        private IDbTransaction _transaction;
+
         private IFavoriteGenreRepository _favoriteGenreRepository { get; set; }
         private IFavoriteFilmRepository _favoriteFilmRepository { get; set; }
         public UnitOfWork(MySqlConnection connection)
         {
             _connection = connection != null ? connection : throw new ArgumentNullException("connectionString");
+            // open connection 
+            _connection.Open();
+            // start transaction
+            _transaction = _connection.BeginTransaction();
+
+        }
+
+        public void Commit()
+        {
+            try
+            {
+                _transaction.Commit();
+            }
+            catch
+            {
+                _transaction.Rollback();
+                throw;
+            }
         }
 
         public IFavoriteGenreRepository FavoriteGenreRepository
         {
             get
             {
-                _favoriteGenreRepository = _favoriteGenreRepository ?? new FavoriteGenreRepository(_connection);
+                _favoriteGenreRepository = _favoriteGenreRepository ?? new FavoriteGenreRepository(_transaction);
                 return _favoriteGenreRepository;
             }
         }
@@ -32,9 +52,31 @@ namespace greatflix.dal
         {
             get
             {
-                _favoriteFilmRepository = _favoriteFilmRepository ?? new FavoriteFilmRepository(_connection);
+                _favoriteFilmRepository = _favoriteFilmRepository ?? new FavoriteFilmRepository(_transaction);
                 return _favoriteFilmRepository;
             }
+        }
+
+        private bool disposed = false;
+        protected virtual void Dispose(bool disposing)
+        {
+            if (!disposed)
+            {
+                if (disposing)
+                {
+                    _transaction.Dispose();
+                    _connection.Dispose();
+                    _transaction = null;
+                    _connection = null;
+                }
+            }
+            disposed = true;
+        }
+
+        public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
         }
     }
 }

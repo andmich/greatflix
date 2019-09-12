@@ -4,9 +4,11 @@ using System.Text;
 
 namespace greatflix.dal.Interfaces
 {
-    public interface IUnitOfWork
+    public interface IUnitOfWork : IDisposable
     {
         IFavoriteGenreRepository FavoriteGenreRepository { get; }
         IFavoriteFilmRepository FavoriteFilmRepository { get; }
+
+        void Commit();
     }
 }

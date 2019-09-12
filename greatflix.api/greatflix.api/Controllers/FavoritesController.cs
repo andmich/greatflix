@@ -53,14 +53,19 @@ namespace greatflix.api.Controllers
             {
                 try
                 {
-                    _unitOfWork.FavoriteGenreRepository.Create(new dal.Models.FavoriteGenre
+                    using (_unitOfWork)
                     {
-                        user_id = userId,
-                        genre_id = insertFavoriteGenreDTO.GenreId,
-                        source = insertFavoriteGenreDTO.Source
-                    });
+                        _unitOfWork.FavoriteGenreRepository.Create(new dal.Models.FavoriteGenre
+                        {
+                            user_id = userId,
+                            genre_id = insertFavoriteGenreDTO.GenreId,
+                            source = insertFavoriteGenreDTO.Source
+                        });
 
-                    return Ok();
+                        _unitOfWork.Commit();
+
+                        return Ok();
+                    }
                 }
                 catch (Exception ex)
                 {

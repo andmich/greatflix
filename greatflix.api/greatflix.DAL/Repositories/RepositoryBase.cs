@@ -7,10 +7,12 @@ namespace greatflix.dal.Repositories
 {
     public abstract class RepositoryBase
     {
+        protected IDbTransaction _transaction;
         protected IDbConnection _connection;
-        public RepositoryBase(IDbConnection connection)
+        public RepositoryBase(IDbTransaction transaction)
         {
-            _connection = connection ?? throw new ArgumentNullException("connection");
+            _transaction = transaction ?? throw new ArgumentNullException("connection");
+            _connection = transaction.Connection;
         }
     }
 }

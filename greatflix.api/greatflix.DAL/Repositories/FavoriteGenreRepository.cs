@@ -11,8 +11,8 @@ namespace greatflix.dal.Repositories
 {
     public class FavoriteGenreRepository : RepositoryBase, IFavoriteGenreRepository
     {
-        public FavoriteGenreRepository(IDbConnection connection) 
-            : base(connection)
+        public FavoriteGenreRepository(IDbTransaction transaction) 
+            : base(transaction)
         {
         }
 
@@ -24,7 +24,8 @@ namespace greatflix.dal.Repositories
                 {
                     p_user_id = userId
                 },
-                commandType: CommandType.StoredProcedure).ToList();
+                commandType: CommandType.StoredProcedure,
+                transaction: _transaction).ToList();
         }
 
         public void Create(FavoriteGenre favoriteGenreToInsert)
@@ -37,7 +38,8 @@ namespace greatflix.dal.Repositories
                     p_genre_id = favoriteGenreToInsert.genre_id,
                     p_source = favoriteGenreToInsert.source
                 },
-                commandType: CommandType.StoredProcedure);
+                commandType: CommandType.StoredProcedure,
+                transaction: _transaction);
         }
     }
 }
