@@ -1,0 +1,21 @@
+@media screen and (min-width: 200px) {
+  .grid-slide {
+    max-width: 50% !important;
+  }
+}
+@media screen and (min-width: 600px) {
+  .grid-slide {
+    max-width: 33.33% !important;
+  }
+}
+@media screen and (min-width: 700px) {
+  .grid-slide {
+    max-width: 25% !important;
+  }
+}
+@media screen and (min-width: 1000px) {
+  .grid-slide {
+    max-width: 20% !important;
+  }
+}
+

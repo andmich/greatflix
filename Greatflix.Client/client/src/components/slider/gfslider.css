@@ -1,0 +1,33 @@
+@media screen and (min-width: 200px) {
+  .gfcard {
+    max-width: 50% !important;
+  }
+}
+@media screen and (min-width: 600px) {
+  .gfcard {
+    max-width: 33.33% !important;
+  }
+}
+@media screen and (min-width: 700px) {
+  .gfcard {
+    max-width: 25% !important;
+  }
+}
+@media screen and (min-width: 1000px) {
+  .gfcard {
+    max-width: 16.66% !important;
+  }
+}
+.gfcard {
+  transition: all .2s ease-in-out;
+  padding: .75rem;
+  margin-bottom: .3rem;
+  border: 0;
+  flex-basis: 50%;
+  flex-grow: 0;
+  flex-shrink: 0;
+  cursor: pointer;
+}
+.gfcard:hover {
+  transform: scale(1.1); 
+}
