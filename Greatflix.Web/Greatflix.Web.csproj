@@ -1,0 +1,25 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="AutoMapper" Version="9.0.0" />
+    <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="7.0.0" />
+    <PackageReference Include="AutoWrapper.Core" Version="4.0.1" />
+    <PackageReference Include="log4net-loggly" Version="9.0.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="3.1.3" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="3.1.3" />
+    <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="3.1.1" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Greatflix.Application\Greatflix.Application.csproj" />
+    <ProjectReference Include="..\Greatflix.Common\Greatflix.Common.csproj" />
+    <ProjectReference Include="..\Greatflix.Data\Greatflix.Data.csproj" />
+    <ProjectReference Include="..\Greatflix.Domain\Greatflix.Domain.csproj" />
+  </ItemGroup>
+
+
+</Project>
